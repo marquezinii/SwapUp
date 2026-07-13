@@ -1,7 +1,7 @@
 <div align="center">
   <img src="assets/swapup-icon.png" alt="SwapUp! logo" width="112" />
   <h1>SwapUp!</h1>
-  <p><strong>A private, multilingual calendar for Windows — designed to keep planning simple, polished, and local.</strong></p>
+  <p><strong>A privacy-first, multilingual calendar for Windows — designed to keep planning simple, polished, and local.</strong></p>
 </div>
 
 > [!IMPORTANT]
