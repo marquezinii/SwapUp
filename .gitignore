@@ -8,3 +8,5 @@ obj/
 *.swapup.json
 __pycache__/
 *.py[cod]
+/scripts/install.ps1
+/scripts/uninstall.ps1
