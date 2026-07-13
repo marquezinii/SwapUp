@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#6757e8">
-  <title>SwapUp!</title>
+  <title>SwapUp! Agenda ©</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="app-shell">
     <aside class="sidebar">
-      <div class="brand"><img src="/assets/swapup-icon.png" alt=""><div><b>SwapUp!</b><span>meu calendário</span></div></div>
+      <div class="brand"><img src="/assets/swapup-schedule-icon.png" alt=""><div><b data-brand data-no-i18n>SwapUp! Agenda ©</b><span>meu calendário</span></div></div>
       <button class="new-event primary" id="newEventBtn"><span>＋</span> Novo evento</button>
       <button class="agenda-shortcut" id="agendaShortcut"><span>☷</span> Ver agenda</button>
       <div class="mini-calendar" id="miniCalendar"></div>
@@ -40,10 +40,10 @@
               <div class="profile-summary"><span class="profile-avatar">EU</span><div><b id="menuProfileName">Meu perfil</b><small>Conta local</small></div></div>
               <button data-open-settings="profile"><span>◎</span><div><b>Meu perfil</b><small>Nome e preferências pessoais</small></div></button>
               <div class="menu-separator"></div>
-              <button data-open-settings="general"><span>⚙</span><div><b>Configurações</b><small>Personalize o SwapUp!</small></div></button>
+              <button data-open-settings="general"><span>⚙</span><div><b>Configurações</b><small>Personalize o SwapUp! Agenda ©</small></div></button>
               <button data-open-settings="shortcuts"><span>⌨</span><div><b>Atalhos de teclado</b><small>Trabalhe mais rápido</small></div></button>
               <div class="menu-separator"></div>
-              <div class="menu-version">SwapUp! <span>versão 1.3.2</span></div>
+              <div class="menu-version"><b data-brand data-no-i18n>SwapUp! Agenda ©</b> <span>versão 1.3.3</span></div>
             </div>
           </div>
         </div>
@@ -117,7 +117,7 @@
         </nav>
         <div class="settings-content">
           <section class="settings-panel" data-panel="profile">
-            <div class="panel-title"><h3>Meu perfil</h3><p>Como você aparece dentro do SwapUp! neste computador.</p></div>
+            <div class="panel-title"><h3>Meu perfil</h3><p>Como você aparece dentro do SwapUp! Agenda © neste computador.</p></div>
             <div class="profile-editor"><span class="profile-avatar large" id="profilePreview">EU</span><div><b>Perfil local</b><small>Seus dados não saem deste computador.</small></div></div>
             <div class="profile-photo-actions"><button class="ghost" type="button" id="chooseProfilePhoto">Escolher foto</button><button class="ghost danger hidden" type="button" id="removeProfilePhoto">Remover foto</button><input class="hidden" type="file" id="profilePhotoInput" accept="image/png,image/jpeg,image/webp"><small>Recomendado: imagem quadrada de 512 × 512 px, PNG, JPG ou WebP. A foto será otimizada e salva somente neste computador.</small></div>
             <label class="field full"><span>Seu nome</span><input id="profileName" maxlength="50" placeholder="Como devemos chamar você?"></label>
@@ -125,10 +125,11 @@
           </section>
           <section class="settings-panel active" data-panel="general">
             <div class="panel-title"><h3>Geral</h3><p>Defina o comportamento principal do aplicativo.</p></div>
-            <div class="setting-row"><div><b>Tela inicial</b><small>Visualização exibida ao abrir o SwapUp!</small></div><select id="settingStartView"><option value="month">Calendário mensal</option><option value="week">Calendário semanal</option><option value="day">Agenda diária</option><option value="agenda">Lista de agenda</option></select></div>
+            <div class="setting-row"><div><b>Tela inicial</b><small>Visualização exibida ao abrir o SwapUp! Agenda ©</small></div><select id="settingStartView"><option value="month">Calendário mensal</option><option value="week">Calendário semanal</option><option value="day">Agenda diária</option><option value="agenda">Lista de agenda</option></select></div>
             <div class="setting-row"><div><b>Idioma</b><small>Idioma da interface e das datas</small></div><select id="settingLanguage"><option value="system">Automático (idioma do sistema)</option><option value="pt-BR">Português (Brasil)</option><option value="en">English</option><option value="es">Español</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="it">Italiano</option><option value="nl">Nederlands</option><option value="pl">Polski</option><option value="ru">Русский</option><option value="tr">Türkçe</option><option value="ar">العربية</option><option value="hi">हिन्दी</option><option value="zh-CN">简体中文</option><option value="ja">日本語</option><option value="ko">한국어</option><option value="id">Bahasa Indonesia</option></select></div>
             <div class="setting-row"><div><b>Fuso horário</b><small>Detectado automaticamente neste computador</small></div><span class="setting-value" id="timezoneValue"></span></div>
             <label class="setting-row"><div><b>Iniciar com o Windows</b><small>Abre discretamente na bandeja para manter os lembretes.</small></div><span class="switch"><input type="checkbox" id="settingAutostart"><i></i></span></label>
+            <label class="setting-row"><div><b>Manter na bandeja ao fechar</b><small>Quando ativado, o botão X oculta o aplicativo e mantém os lembretes em segundo plano.</small></div><span class="switch"><input type="checkbox" id="settingCloseToTray"><i></i></span></label>
             <label class="setting-row"><div><b>Confirmar antes de excluir</b><small>Evita a remoção acidental de compromissos.</small></div><span class="switch"><input type="checkbox" id="settingConfirmDelete"><i></i></span></label>
           </section>
           <section class="settings-panel" data-panel="appearance">
@@ -155,7 +156,7 @@
             <div class="panel-title"><h3>Notificações</h3><p>Escolha como receber seus lembretes.</p></div>
             <label class="setting-row"><div><b>Ativar lembretes</b><small>Mostra avisos do Windows antes dos eventos.</small></div><span class="switch"><input type="checkbox" id="settingNotifications"><i></i></span></label>
             <label class="setting-row"><div><b>Mostrar o endereço</b><small>Inclui o local do compromisso na notificação.</small></div><span class="switch"><input type="checkbox" id="settingNotifyLocation"><i></i></span></label>
-            <div class="notice-card"><span>◇</span><div><b>Lembretes privados e locais</b><p>O SwapUp! verifica sua agenda no próprio computador. Nenhum evento é enviado para servidores externos.</p></div></div>
+            <div class="notice-card"><span>◇</span><div><b>Lembretes privados e locais</b><p>O SwapUp! Agenda © verifica sua agenda no próprio computador. Nenhum evento é enviado para servidores externos.</p></div></div>
           </section>
           <section class="settings-panel" data-panel="shortcuts">
             <div class="panel-title"><h3>Atalhos de teclado</h3><p>Acesse as ações mais usadas sem tirar as mãos do teclado.</p></div>
@@ -165,18 +166,18 @@
             <div class="panel-title"><h3>Dados e backup</h3><p>Seus eventos ficam armazenados somente neste computador.</p></div>
             <div class="data-stats"><div><b id="statEvents">0</b><span>eventos</span></div><div><b id="statCategories">0</b><span>categorias</span></div><div><b>Local</b><span>armazenamento</span></div></div>
             <button class="data-action" id="settingsBackupBtn"><span>↗</span><div><b>Fazer backup agora</b><small>Salve eventos, perfil e configurações em um arquivo.</small></div></button>
-            <button class="data-action" id="settingsRestoreBtn"><span>↙</span><div><b>Restaurar um backup</b><small>Importe um arquivo criado anteriormente pelo SwapUp!.</small></div></button>
+            <button class="data-action" id="settingsRestoreBtn"><span>↙</span><div><b>Restaurar um backup</b><small>Importe um arquivo criado anteriormente pelo SwapUp! Agenda ©.</small></div></button>
           </section>
           <section class="settings-panel" data-panel="support">
-            <div class="panel-title"><h3>Suporte e feedback</h3><p>Encontrou algo errado? Envie os detalhes para ajudar a melhorar o SwapUp!.</p></div>
+            <div class="panel-title"><h3>Suporte e feedback</h3><p>Encontrou algo errado? Envie os detalhes para ajudar a melhorar o SwapUp! Agenda ©.</p></div>
             <div class="support-channel" id="supportChannelStatus"></div>
             <button class="data-action" id="settingsReportBugBtn"><span>⚑</span><div><b>Relatar um bug</b><small>Informe o tipo, impacto, passos para reproduzir e envie uma captura de tela.</small></div></button>
             <div class="notice-card"><span>♡</span><div><b>Relatos ajudam o produto a evoluir</b><p>O relatório inclui apenas as informações que você preencher. Seus eventos e dados pessoais nunca são anexados automaticamente.</p></div></div>
           </section>
           <section class="settings-panel" data-panel="about">
-            <div class="about-logo"><img src="/assets/swapup-icon.png" alt=""><h3>SwapUp!</h3><p>Seu tempo, do seu jeito.</p><span>Versão 1.3.2</span></div>
+            <div class="about-logo"><img src="/assets/swapup-schedule-icon.png" alt=""><h3 data-brand data-no-i18n>SwapUp! Agenda ©</h3><p>Seu tempo, do seu jeito.</p><span>Versão 1.3.3</span></div>
             <div class="notice-card"><span>✓</span><div><b>Você está usando a versão mais recente</b><p>Calendário local, rápido e projetado para respeitar sua privacidade.</p></div></div>
-            <div class="credits"><b>Desenvolvido por Felipe Marquezini</b><p>© 2026 SwapUp! Todos os direitos reservados.</p></div>
+            <div class="credits"><b>Desenvolvido por Felipe Marquezini</b><p>© 2026 SwapUp! Agenda ©. Todos os direitos reservados.</p></div>
           </section>
         </div>
       </div>
@@ -202,7 +203,7 @@
       <label class="field full"><span>Passos para reproduzir</span><textarea id="bugSteps" rows="3" maxlength="1500" placeholder="1. Abri...  2. Cliquei...  3. O problema apareceu..."></textarea></label>
       <label class="field full"><span>E-mail para retorno (opcional)</span><input type="email" id="bugContact" maxlength="120" placeholder="voce@exemplo.com"></label>
       <div class="bug-attachment"><div><b>Captura de tela ou foto</b><small>Opcional · PNG, JPG ou WebP · máximo de 5 MB</small></div><button class="ghost" type="button" id="chooseBugAttachment">Adicionar imagem</button><input class="hidden" type="file" id="bugAttachmentInput" accept="image/png,image/jpeg,image/webp"><div class="bug-file hidden" id="bugFile"><img id="bugImagePreview" alt=""><span id="bugFileName"></span><button type="button" id="removeBugAttachment">×</button></div></div>
-      <div class="bug-privacy">O relatório inclui versão, idioma, sistema de calendário e versão do Windows. Nenhum evento, nota ou endereço é enviado.</div>
+      <div class="bug-privacy">O relatório inclui versão, idioma, sistema de calendário e versão do Windows. Nenhum evento, nota ou endereço é enviado. Seu e-mail só é incluído se você preencher o campo opcional.</div>
       <div class="bug-delivery-status hidden" id="bugDeliveryStatus"></div>
       <div class="modal-actions"><button type="button" class="ghost" id="copyBugReportBtn">Copiar relatório</button><span></span><button type="button" class="ghost" data-bug-close>Cancelar</button><button type="submit" class="primary">Enviar relatório</button></div>
     </form>

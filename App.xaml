@@ -1,4 +1,4 @@
-<Application x:Class="SwapUp.App"
+<Application x:Class="SwapUp.Schedule.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              ShutdownMode="OnExplicitShutdown">

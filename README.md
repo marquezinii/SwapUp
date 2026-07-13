@@ -1,21 +1,21 @@
 <div align="center">
-  <img src="assets/swapup-icon.png" alt="SwapUp! logo" width="112" />
-  <h1>SwapUp!</h1>
+  <img src="assets/swapup-schedule-icon.png" alt="SwapUp! Schedule © logo" width="112" />
+  <h1>SwapUp! Schedule ©</h1>
   <p><strong>A privacy-first, multilingual calendar for Windows — designed to keep planning simple, polished, and local.</strong></p>
 </div>
 
 > [!IMPORTANT]
-> SwapUp! is currently in active development. Public builds, downloads, and installation instructions are intentionally not available yet.
+> SwapUp! Schedule © is currently in active development. Public builds, downloads, and installation instructions are intentionally not available yet.
 
 ## Overview
 
-SwapUp! is a lightweight desktop calendar focused on clear daily planning, personal customization, and local-first privacy. It combines month, week, day, and agenda views with event organization, reminders, multiple calendar systems, accessibility preferences, and a carefully designed Windows interface.
+SwapUp! Schedule © is a lightweight desktop calendar focused on clear daily planning, personal customization, and local-first privacy. It combines month, week, day, and agenda views with event organization, reminders, multiple calendar systems, accessibility preferences, and a carefully designed Windows interface.
 
 The project is currently being developed and tested as a local Windows application. The repository is public to document its progress and technical direction, not to distribute production-ready builds.
 
 ## Current Status
 
-- Version: `1.3.2`.
+- Version: `1.3.3`.
 - Stage: private local alpha / active development.
 - Initial platform: Windows 10 and Windows 11.
 - Distribution: not available yet.
@@ -34,9 +34,10 @@ The project is currently being developed and tested as a local Windows applicati
 - Text scale, compact mode, stronger contrast, reduced transparency, and reduced motion.
 - Automatic system time-zone detection.
 - Local reminders through the Windows notification area.
+- Configurable close-button behavior: exit completely or stay available in the notification area.
 - Keyboard shortcuts for navigation and common actions.
 - Local backup and restore.
-- Built-in bug report form with optional image attachment.
+- Built-in bug report form with optional image attachment and an email-hidden delivery relay.
 - Custom Windows title bar, in-app confirmation dialogs, and themed scrollbars.
 
 ## Languages
@@ -64,17 +65,18 @@ Translations are validated for key coverage as part of the local verification wo
 
 ## Privacy Principles
 
-SwapUp! is designed around local ownership of calendar data:
+SwapUp! Schedule © is designed around local ownership of calendar data:
 
 - Events, notes, addresses, profile information, and preferences stay on the user’s computer.
 - The calendar does not require an account.
 - No analytics or advertising services are included.
-- Bug reports attach only the information explicitly provided by the user.
+- Bug reports attach only the form contents and limited app context shown by the feature; contact information remains optional.
+- Bug reports are delivered through FormSubmit using a random relay identifier, so the private destination address is not embedded in the app or repository.
 - External navigation is limited to user-requested actions such as opening an address in a map service.
 
 ## Technical Direction
 
-SwapUp! uses:
+SwapUp! Schedule © uses:
 
 - .NET 8 and WPF for the Windows application shell, tray integration, shortcuts, notifications, and native window behavior.
 - Microsoft WebView2 for the local HTML, CSS, and JavaScript interface.
@@ -118,4 +120,4 @@ Developed by **Felipe Marquezini**.
 
 No public software license has been selected yet. Unless a license is added later, all rights are reserved.
 
-Copyright © 2026 Felipe Marquezini / SwapUp!.
+Copyright © 2026 Felipe Marquezini / SwapUp! Schedule ©.

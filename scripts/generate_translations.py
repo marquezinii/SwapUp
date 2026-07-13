@@ -21,6 +21,28 @@ LANGUAGES = {
     "hi": "hi", "zh-CN": "zh-CN", "ja": "ja", "ko": "ko", "id": "id",
 }
 
+SOURCE_BRAND = "SwapUp! Agenda ©"
+BRAND_NAMES = {
+    "pt-BR": "SwapUp! Agenda ©", "en": "SwapUp! Schedule ©", "es": "SwapUp! Agenda ©",
+    "fr": "SwapUp! Agenda ©", "de": "SwapUp! Terminplaner ©", "it": "SwapUp! Agenda ©",
+    "nl": "SwapUp! Agenda ©", "pl": "SwapUp! Harmonogram ©", "ru": "SwapUp! Расписание ©",
+    "tr": "SwapUp! Program ©", "ar": "SwapUp! الجدول ©", "hi": "SwapUp! अनुसूची ©",
+    "zh-CN": "SwapUp! 日程 ©", "ja": "SwapUp! スケジュール ©", "ko": "SwapUp! 일정 ©",
+    "id": "SwapUp! Jadwal ©",
+}
+TRANSLATION_OVERRIDES = {
+    "Manter na bandeja ao fechar": {
+        "en": "Keep app in the system tray when closing", "es": "Mantener en la bandeja del sistema al cerrar",
+        "fr": "Conserver dans la zone de notification à la fermeture", "de": "Beim Schließen im Infobereich behalten",
+        "it": "Mantieni nell'area di notifica alla chiusura", "nl": "Bij sluiten in het systeemvak houden",
+        "pl": "Po zamknięciu pozostaw w zasobniku systemowym", "ru": "Оставлять в системном трее при закрытии",
+        "tr": "Kapatırken sistem tepsisinde tut", "ar": "إبقاء التطبيق في علبة النظام عند الإغلاق",
+        "hi": "बंद करने पर सिस्टम ट्रे में रखें", "zh-CN": "关闭时保留在系统托盘",
+        "ja": "閉じるときにシステムトレイに残す", "ko": "닫을 때 시스템 트레이에 유지",
+        "id": "Simpan di baki sistem saat ditutup",
+    },
+}
+
 DYNAMIC_PHRASES = {
     "Próximos eventos", "Nenhum evento neste período", "Sua agenda está tranquila. Adicione seu próximo compromisso.",
     "Sua agenda está livre", "Aproveite o tempo ou planeje algo novo.", "Dia inteiro", "Editar", "eventos",
@@ -28,10 +50,10 @@ DYNAMIC_PHRASES = {
     "O horário final precisa ser após o início.", "Evento atualizado.", "Evento adicionado à sua agenda.",
     "Excluir este evento da sua agenda?", "Evento excluído.", "Digite primeiro um endereço.",
     "Categoria criada.", "Configurações salvas.", "Backup restaurado com sucesso.",
-    "Esse arquivo não é um backup válido do SwapUp!.", "Hoje", "Sem título", "Conta local",
-    "Abrir SwapUp!", "Novo evento", "Sair", "SwapUp! continua ativo",
+    "Esse arquivo não é um backup válido do SwapUp! Agenda ©.", "Hoje", "Sem título", "Conta local",
+    "Abrir SwapUp! Agenda ©", "Novo evento", "Sair", "SwapUp! Agenda © continua ativo",
     "Seus lembretes ficam funcionando na bandeja. Clique duas vezes no ícone para abrir.",
-    "O SwapUp! já está aberto na bandeja do sistema.",
+    "O SwapUp! Agenda © já está aberto na bandeja do sistema.",
     "Seu calendário",
     "Pessoal", "Trabalho", "Saúde", "Importante", "Uso pessoal",
     "Oculto na agenda", "Visível na agenda", "Excluir", "É necessário manter pelo menos um calendário.",
@@ -42,9 +64,10 @@ DYNAMIC_PHRASES = {
     "Preencha o resumo e a descrição antes de copiar.", "Relatório copiado.",
     "Não foi possível copiar automaticamente. Selecione e copie os campos manualmente.", "Preparando o relatório...",
     "O canal de suporte ainda não foi configurado pelo desenvolvedor.",
-    "Seu aplicativo de e-mail foi aberto. Revise e envie a mensagem.", "O relatório foi salvo neste computador.",
+    "Relatório enviado com segurança. Obrigado por ajudar a melhorar o aplicativo.",
+    "Não foi possível enviar agora. Uma cópia foi salva com segurança neste computador.", "O relatório foi salvo neste computador.",
     "Canal de envio configurado e pronto para uso.", "Canal de envio ainda não configurado neste build. Os relatos ficam salvos localmente.",
-    "Salvar backup do SwapUp!", "Restaurar backup do SwapUp!", "Arquivo JSON", "Backup SwapUp!",
+    "Salvar backup do SwapUp! Agenda ©", "Restaurar backup do SwapUp! Agenda ©", "Arquivo JSON", "Backup SwapUp! Agenda ©",
     "Alterações salvas", "Cor personalizada aplicada.", "Cor inválida.",
     "Excluir evento?", "Excluir evento", "Excluir calendário?", "Esta ação não pode ser desfeita.",
     "Automático (idioma do sistema)",
@@ -76,17 +99,17 @@ def translate_language(code: str, target: str, phrases: list[str], existing: dic
     session = requests.Session()
     result = {phrase: existing[phrase] for phrase in phrases if existing.get(phrase)}
     for source in list(result):
-        if "SwapUp!" in source and "SwapUp!" not in result[source]:
+        if SOURCE_BRAND in source and BRAND_NAMES[code] not in result[source]:
             del result[source]
     missing = [p for p in phrases if not result.get(p)]
     for index, phrase in enumerate(missing, 1):
         for attempt in range(4):
             try:
-                if phrase == "SwapUp!":
-                    result[phrase] = phrase
+                if phrase == SOURCE_BRAND:
+                    result[phrase] = BRAND_NAMES[code]
                     break
                 brand_token = "ZXQSWAPUPZXQ"
-                payload = phrase.replace("SwapUp!", brand_token)
+                payload = phrase.replace(SOURCE_BRAND, brand_token)
                 response = session.get(
                     "https://translate.googleapis.com/translate_a/single",
                     params={"client": "gtx", "sl": "pt", "tl": target, "dt": "t", "q": payload},
@@ -94,7 +117,7 @@ def translate_language(code: str, target: str, phrases: list[str], existing: dic
                 )
                 response.raise_for_status()
                 translated = "".join(part[0] for part in response.json()[0] if part[0])
-                translated = re.sub(r"ZXQ\s*SWAPUP\s*ZXQ", "SwapUp!", translated, flags=re.IGNORECASE)
+                translated = re.sub(r"ZXQ\s*SWAPUP\s*ZXQ", BRAND_NAMES[code], translated, flags=re.IGNORECASE)
                 if translated:
                     result[phrase] = translated
                     break
@@ -104,6 +127,9 @@ def translate_language(code: str, target: str, phrases: list[str], existing: dic
                 time.sleep(1.2 * (attempt + 1))
         if index % 25 == 0:
             print(f"[{code}] {index}/{len(missing)}", flush=True)
+    for source, localized in TRANSLATION_OVERRIDES.items():
+        if source in phrases and code in localized:
+            result[source] = localized[code]
     return code, result
 
 

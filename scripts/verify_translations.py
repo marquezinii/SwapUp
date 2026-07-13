@@ -5,7 +5,7 @@ from pathlib import Path
 
 from bs4 import BeautifulSoup
 
-from generate_translations import collect_phrases
+from generate_translations import BRAND_NAMES, SOURCE_BRAND, collect_phrases
 
 ROOT = Path(__file__).resolve().parents[1]
 raw = (ROOT / "web" / "i18n-data.js").read_text(encoding="utf-8")
@@ -14,7 +14,7 @@ expected_languages = {"pt-BR", "en", "es", "fr", "de", "it", "nl", "pl", "ru", "
 phrases = collect_phrases()
 critical = [
     "Configurações", "Salvar alterações", "Meu perfil", "Adicionar evento",
-    "Desenvolvido por Felipe Marquezini", "© 2026 SwapUp! Todos os direitos reservados.",
+    "Desenvolvido por Felipe Marquezini", "© 2026 SwapUp! Agenda ©. Todos os direitos reservados.",
     "Cor de destaque", "Alterações salvas", "Automático (idioma do sistema)",
 ]
 
@@ -24,7 +24,7 @@ for code, values in packs.items():
     assert not missing, f"{code}: {len(missing)} traduções ausentes: {missing[:5]}"
     assert all(key in values for key in critical), f"{code}: texto crítico ausente"
     assert len(values) == len(phrases), f"{code}: esperado {len(phrases)}, recebido {len(values)}"
-    assert all("SwapUp!" in translated for source, translated in values.items() if "SwapUp!" in source), f"{code}: marca SwapUp! foi traduzida"
+    assert all(BRAND_NAMES[code] in translated for source, translated in values.items() if SOURCE_BRAND in source), f"{code}: nome localizado da marca ausente"
 
 soup = BeautifulSoup((ROOT / "web" / "index.html").read_text(encoding="utf-8"), "html.parser")
 language_values = {option.get("value") for option in soup.select("#settingLanguage option") if option.get("value") != "system"}

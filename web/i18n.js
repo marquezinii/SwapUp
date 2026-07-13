@@ -3,6 +3,7 @@
   const packs=window.SWAPUP_TRANSLATIONS||{};
   const supported=['pt-BR','en','es','fr','de','it','nl','pl','ru','tr','ar','hi','zh-CN','ja','ko','id'];
   const localeMap={'pt-BR':'pt-BR',en:'en-US',es:'es-ES',fr:'fr-FR',de:'de-DE',it:'it-IT',nl:'nl-NL',pl:'pl-PL',ru:'ru-RU',tr:'tr-TR',ar:'ar-SA',hi:'hi-IN','zh-CN':'zh-CN',ja:'ja-JP',ko:'ko-KR',id:'id-ID'};
+  const brandMap={'pt-BR':'SwapUp! Agenda ©',en:'SwapUp! Schedule ©',es:'SwapUp! Agenda ©',fr:'SwapUp! Agenda ©',de:'SwapUp! Terminplaner ©',it:'SwapUp! Agenda ©',nl:'SwapUp! Agenda ©',pl:'SwapUp! Harmonogram ©',ru:'SwapUp! Расписание ©',tr:'SwapUp! Program ©',ar:'SwapUp! الجدول ©',hi:'SwapUp! अनुसूची ©','zh-CN':'SwapUp! 日程 ©',ja:'SwapUp! スケジュール ©',ko:'SwapUp! 일정 ©',id:'SwapUp! Jadwal ©'};
   const rtl=new Set(['ar']);
   const textOrigins=new WeakMap(),attributeOrigins=new WeakMap();
   let current='pt-BR';
@@ -46,5 +47,5 @@
   function setLanguage(requested){
     current=resolve(requested);document.documentElement.lang=localeMap[current];document.documentElement.dir=rtl.has(current)?'rtl':'ltr';apply(document);return current;
   }
-  window.SwapUpI18n={supported,resolve,setLanguage,apply,t,get code(){return current},get locale(){return localeMap[current]}};
+  window.SwapUpI18n={supported,resolve,setLanguage,apply,t,get code(){return current},get locale(){return localeMap[current]},get brand(){return brandMap[current]}};
 })();

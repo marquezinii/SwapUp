@@ -49,4 +49,4 @@ jobs:
         run: node scripts/verify_calendar_systems.js
 
       - name: Build Release configuration
-        run: dotnet build SwapUp.csproj --configuration Release
+        run: dotnet build SwapUp.Schedule.csproj --configuration Release

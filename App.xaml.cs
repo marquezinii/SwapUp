@@ -2,7 +2,7 @@ using System.Threading;
 using System.Windows;
 using Microsoft.Win32;
 
-namespace SwapUp;
+namespace SwapUp.Schedule;
 
 public partial class App : System.Windows.Application
 {
@@ -11,11 +11,13 @@ public partial class App : System.Windows.Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
-        _mutex = new Mutex(true, "SwapUp.Calendar.SingleInstance", out var isFirst);
+        _mutex = new Mutex(true, "SwapUp.Schedule.SingleInstance", out var isFirst);
         if (!isFirst)
         {
-            var duplicateMessage = Registry.CurrentUser.OpenSubKey(@"Software\SwapUp")?.GetValue("DuplicateMessage") as string ?? "O SwapUp! já está aberto na bandeja do sistema.";
-            System.Windows.MessageBox.Show(duplicateMessage, "SwapUp!", MessageBoxButton.OK, MessageBoxImage.Information);
+            using var preferences = Registry.CurrentUser.OpenSubKey(@"Software\SwapUpSchedule");
+            var duplicateMessage = preferences?.GetValue("DuplicateMessage") as string ?? "O SwapUp! Agenda © já está aberto na bandeja do sistema.";
+            var brandName = preferences?.GetValue("BrandName") as string ?? "SwapUp! Agenda ©";
+            System.Windows.MessageBox.Show(duplicateMessage, brandName, MessageBoxButton.OK, MessageBoxImage.Information);
             Shutdown();
             return;
         }

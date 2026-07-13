@@ -6,6 +6,7 @@ obj/
 *.suo
 *.log
 *.swapup.json
+*.swapup-schedule.json
 __pycache__/
 *.py[cod]
 /scripts/install.ps1
