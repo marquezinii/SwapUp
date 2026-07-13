@@ -1,0 +1,10 @@
+.build/
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.log
+*.swapup.json
+__pycache__/
+*.py[cod]

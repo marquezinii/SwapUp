@@ -1,0 +1,49 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Build and verify
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check JavaScript syntax
+        shell: pwsh
+        run: |
+          node --check web/app.js
+          node --check web/i18n.js
+          node --check web/i18n-data.js
+
+      - name: Verify translations
+        run: python scripts/verify_translations.py
+
+      - name: Verify calendar systems
+        run: node scripts/verify_calendar_systems.js
+
+      - name: Build Release configuration
+        run: dotnet build SwapUp.csproj --configuration Release

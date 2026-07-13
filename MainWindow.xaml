@@ -1,0 +1,76 @@
+<Window x:Class="SwapUp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        Title="SwapUp! — Seu calendário"
+        Width="1440" Height="900" MinWidth="980" MinHeight="680"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None" ResizeMode="CanResize"
+        Background="#15151E"
+        Icon="assets/swapup-icon.png">
+  <shell:WindowChrome.WindowChrome>
+    <shell:WindowChrome CaptionHeight="0" ResizeBorderThickness="6" CornerRadius="10" GlassFrameThickness="0" UseAeroCaptionButtons="False" />
+  </shell:WindowChrome.WindowChrome>
+  <Window.Resources>
+    <SolidColorBrush x:Key="TitleBarButtonHover" Color="#292935" />
+    <Style x:Key="TitleBarButton" TargetType="Button">
+      <Setter Property="Width" Value="46" />
+      <Setter Property="Height" Value="36" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="#BDBBC9" />
+      <Setter Property="FontFamily" Value="Segoe UI" />
+      <Setter Property="FontSize" Value="13" />
+      <Setter Property="Cursor" Value="Hand" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border x:Name="ChromeButtonBackground" Background="{TemplateBinding Background}">
+              <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="ChromeButtonBackground" Property="Background" Value="{DynamicResource TitleBarButtonHover}" />
+                <Setter Property="Foreground" Value="White" />
+              </Trigger>
+              <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="ChromeButtonBackground" Property="Opacity" Value="0.75" />
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+    <Style x:Key="CloseTitleBarButton" TargetType="Button" BasedOn="{StaticResource TitleBarButton}">
+      <Style.Triggers>
+        <Trigger Property="IsMouseOver" Value="True">
+          <Setter Property="Background" Value="#D94F61" />
+          <Setter Property="Foreground" Value="White" />
+        </Trigger>
+      </Style.Triggers>
+    </Style>
+  </Window.Resources>
+  <Border x:Name="WindowBorder" BorderBrush="#292935" BorderThickness="1" Background="#15151E">
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="36" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+      <Grid x:Name="TitleBar" Grid.Row="0" Background="#15151E" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0" IsHitTestVisible="False">
+          <Image Source="assets/swapup-icon.png" Width="19" Height="19" Stretch="Uniform" />
+          <TextBlock x:Name="TitleBarText" Text="SwapUp!" Foreground="#F2F1F8" FontFamily="Segoe UI Variable Display, Segoe UI" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center" Margin="8,0,0,0" />
+          <Border Width="4" Height="4" CornerRadius="2" Background="#6757E8" Margin="8,1,0,0" />
+          <TextBlock Text="calendário" Foreground="#858393" FontFamily="Segoe UI" FontSize="9" VerticalAlignment="Center" Margin="6,0,0,0" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+          <Button x:Name="MinimizeButton" Style="{StaticResource TitleBarButton}" Content="—" ToolTip="Minimizar" Click="MinimizeButton_Click" />
+          <Button x:Name="MaximizeButton" Style="{StaticResource TitleBarButton}" Content="□" ToolTip="Maximizar" Click="MaximizeButton_Click" />
+          <Button x:Name="CloseButton" Style="{StaticResource CloseTitleBarButton}" Content="×" FontSize="18" ToolTip="Fechar" Click="CloseButton_Click" />
+        </StackPanel>
+      </Grid>
+      <wv2:WebView2 Grid.Row="1" x:Name="Browser" DefaultBackgroundColor="#15151E" />
+    </Grid>
+  </Border>
+</Window>

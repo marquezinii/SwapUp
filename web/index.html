@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#6757e8">
+  <title>SwapUp!</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><img src="/assets/swapup-icon.png" alt=""><div><b>SwapUp!</b><span>meu calendário</span></div></div>
+      <button class="new-event primary" id="newEventBtn"><span>＋</span> Novo evento</button>
+      <button class="agenda-shortcut" id="agendaShortcut"><span>☷</span> Ver agenda</button>
+      <div class="mini-calendar" id="miniCalendar"></div>
+      <div class="side-section">
+        <div class="section-title">Calendários <span><button id="manageCalendarsBtn" title="Gerenciar calendários">⚙</button><button id="addCategoryBtn" title="Novo calendário">＋</button></span></div>
+        <div id="categoryFilters"></div>
+      </div>
+      <div class="side-footer">
+        <button class="report-bug-link" id="reportBugBtn"><span>⚑&nbsp; Relatar um bug</span></button>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div class="date-nav">
+          <button class="ghost" id="todayBtn">Hoje</button>
+          <button class="icon-btn" id="prevBtn" aria-label="Anterior">‹</button>
+          <button class="icon-btn" id="nextBtn" aria-label="Próximo">›</button>
+          <h1 id="periodTitle"></h1>
+        </div>
+        <div class="top-actions">
+          <label class="search"><span>⌕</span><input id="searchInput" placeholder="Buscar eventos..."></label>
+          <div class="view-switch"><button data-view="month" class="active">Mês</button><button data-view="week">Semana</button><button data-view="day">Dia</button></div>
+          <div class="profile-control">
+            <button class="avatar" id="profileBtn" title="Abrir menu do perfil">EU</button>
+            <div class="profile-menu hidden" id="profileMenu">
+              <div class="profile-summary"><span class="profile-avatar">EU</span><div><b id="menuProfileName">Meu perfil</b><small>Conta local</small></div></div>
+              <button data-open-settings="profile"><span>◎</span><div><b>Meu perfil</b><small>Nome e preferências pessoais</small></div></button>
+              <div class="menu-separator"></div>
+              <button data-open-settings="general"><span>⚙</span><div><b>Configurações</b><small>Personalize o SwapUp!</small></div></button>
+              <button data-open-settings="shortcuts"><span>⌨</span><div><b>Atalhos de teclado</b><small>Trabalhe mais rápido</small></div></button>
+              <div class="menu-separator"></div>
+              <div class="menu-version">SwapUp! <span>versão 1.3.2</span></div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="insight" id="insightCard">
+        <div><span class="eyebrow">PRÓXIMO COMPROMISSO</span><h2 id="nextEventTitle">Sua agenda está livre</h2><p id="nextEventMeta">Aproveite o tempo ou planeje algo novo.</p></div>
+        <button class="primary small" id="quickAddBtn">Adicionar evento</button>
+      </section>
+
+      <section id="monthView" class="calendar-card">
+        <div class="weekdays"><span>DOM</span><span>SEG</span><span>TER</span><span>QUA</span><span>QUI</span><span>SEX</span><span>SÁB</span></div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+      </section>
+      <section id="weekView" class="timeline-view hidden"></section>
+      <section id="dayView" class="timeline-view hidden"></section>
+      <section id="agendaView" class="agenda-view hidden"></section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop hidden" id="eventModal">
+    <form class="modal" id="eventForm">
+      <div class="modal-head"><div><span class="eyebrow" id="modalEyebrow">NOVO COMPROMISSO</span><h2 id="modalTitle">Adicionar evento</h2></div><button type="button" class="icon-btn" data-close>×</button></div>
+      <input type="hidden" id="eventId">
+      <label class="field full"><span>Título</span><input id="eventTitle" required maxlength="80" placeholder="Ex.: Consulta, reunião, aniversário..."></label>
+      <div class="form-grid">
+        <label class="field"><span>Data</span><input type="date" id="eventDate" required></label>
+        <label class="toggle-field"><input type="checkbox" id="allDay"><span></span> Dia inteiro</label>
+        <label class="field time-field"><span>Início</span><input type="time" id="startTime" value="09:00" required></label>
+        <label class="field time-field"><span>Término</span><input type="time" id="endTime" value="10:00" required></label>
+        <label class="field"><span>Local / endereço</span><div class="input-action"><input id="location" maxlength="160" placeholder="Onde será?"><button type="button" id="mapBtn" title="Abrir no mapa">↗</button></div></label>
+        <label class="field"><span>Calendário</span><select id="category"></select></label>
+        <label class="field"><span>Lembrete</span><select id="reminder"><option value="0">Na hora</option><option value="5">5 minutos antes</option><option value="15" selected>15 minutos antes</option><option value="30">30 minutos antes</option><option value="60">1 hora antes</option><option value="1440">1 dia antes</option><option value="-1">Sem lembrete</option></select></label>
+        <label class="field"><span>Repetição</span><select id="repeat"><option value="none">Não repetir</option><option value="daily">Todos os dias</option><option value="weekly">Toda semana</option><option value="monthly">Todo mês</option><option value="yearly">Todo ano</option></select></label>
+      </div>
+      <label class="field full"><span>Notas</span><textarea id="notes" rows="3" maxlength="500" placeholder="Detalhes importantes..."></textarea></label>
+      <div class="modal-actions"><button type="button" class="danger ghost hidden" id="deleteBtn">Excluir</button><span></span><button type="button" class="ghost" data-close>Cancelar</button><button type="submit" class="primary">Salvar evento</button></div>
+    </form>
+  </div>
+
+  <div class="modal-backdrop hidden" id="categoryModal">
+    <form class="modal compact" id="categoryForm">
+      <div class="modal-head"><div><span class="eyebrow">ORGANIZAÇÃO</span><h2>Novo calendário</h2></div><button type="button" class="icon-btn" data-category-close>×</button></div>
+      <label class="field full"><span>Nome</span><input id="categoryName" required maxlength="24" placeholder="Ex.: Estudos"></label>
+      <div class="color-picker" id="colorPicker"></div>
+      <div class="modal-actions"><span></span><span></span><button type="button" class="ghost" data-category-close>Cancelar</button><button class="primary">Criar calendário</button></div>
+    </form>
+  </div>
+  <div class="modal-backdrop hidden" id="manageCalendarsModal">
+    <div class="modal medium-modal">
+      <div class="modal-head"><div><span class="eyebrow">ORGANIZAÇÃO</span><h2>Gerenciar calendários</h2><p class="modal-subtitle">Organize as áreas da sua vida e escolha quais aparecem na agenda.</p></div><button type="button" class="icon-btn" data-manage-close>×</button></div>
+      <div class="manage-calendars-list" id="manageCalendarsList"></div>
+      <div class="manage-hint">Ao excluir um calendário, os eventos dele serão movidos para outro calendário para evitar perda de dados.</div>
+      <div class="modal-actions"><span></span><span></span><button type="button" class="ghost" data-manage-close>Fechar</button><button type="button" class="primary" id="manageAddCalendarBtn">＋ Novo calendário</button></div>
+    </div>
+  </div>
+  <div class="modal-backdrop hidden" id="settingsModal">
+    <div class="modal settings-modal">
+      <div class="settings-head"><div><span class="eyebrow">PREFERÊNCIAS</span><h2>Configurações</h2></div><button type="button" class="icon-btn" data-settings-close>×</button></div>
+      <div class="settings-layout">
+        <nav class="settings-nav">
+          <button class="profile-nav" data-settings-tab="profile"><span>◎</span> Meu perfil</button>
+          <button class="active" data-settings-tab="general"><span>⚙</span> Geral</button>
+          <button data-settings-tab="appearance"><span>◐</span> Aparência</button>
+          <button data-settings-tab="calendar"><span>▦</span> Calendário</button>
+          <button data-settings-tab="notifications"><span>♢</span> Notificações</button>
+          <button data-settings-tab="shortcuts"><span>⌨</span> Atalhos</button>
+          <button data-settings-tab="data"><span>↗</span> Dados e backup</button>
+          <button data-settings-tab="support"><span>⚑</span> Suporte</button>
+          <button data-settings-tab="about"><span>ⓘ</span> Sobre</button>
+        </nav>
+        <div class="settings-content">
+          <section class="settings-panel" data-panel="profile">
+            <div class="panel-title"><h3>Meu perfil</h3><p>Como você aparece dentro do SwapUp! neste computador.</p></div>
+            <div class="profile-editor"><span class="profile-avatar large" id="profilePreview">EU</span><div><b>Perfil local</b><small>Seus dados não saem deste computador.</small></div></div>
+            <div class="profile-photo-actions"><button class="ghost" type="button" id="chooseProfilePhoto">Escolher foto</button><button class="ghost danger hidden" type="button" id="removeProfilePhoto">Remover foto</button><input class="hidden" type="file" id="profilePhotoInput" accept="image/png,image/jpeg,image/webp"><small>Recomendado: imagem quadrada de 512 × 512 px, PNG, JPG ou WebP. A foto será otimizada e salva somente neste computador.</small></div>
+            <label class="field full"><span>Seu nome</span><input id="profileName" maxlength="50" placeholder="Como devemos chamar você?"></label>
+            <label class="field full"><span>Ocupação ou descrição</span><input id="profileRole" maxlength="70" placeholder="Ex.: Designer, estudante, uso pessoal"></label>
+          </section>
+          <section class="settings-panel active" data-panel="general">
+            <div class="panel-title"><h3>Geral</h3><p>Defina o comportamento principal do aplicativo.</p></div>
+            <div class="setting-row"><div><b>Tela inicial</b><small>Visualização exibida ao abrir o SwapUp!</small></div><select id="settingStartView"><option value="month">Calendário mensal</option><option value="week">Calendário semanal</option><option value="day">Agenda diária</option><option value="agenda">Lista de agenda</option></select></div>
+            <div class="setting-row"><div><b>Idioma</b><small>Idioma da interface e das datas</small></div><select id="settingLanguage"><option value="system">Automático (idioma do sistema)</option><option value="pt-BR">Português (Brasil)</option><option value="en">English</option><option value="es">Español</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="it">Italiano</option><option value="nl">Nederlands</option><option value="pl">Polski</option><option value="ru">Русский</option><option value="tr">Türkçe</option><option value="ar">العربية</option><option value="hi">हिन्दी</option><option value="zh-CN">简体中文</option><option value="ja">日本語</option><option value="ko">한국어</option><option value="id">Bahasa Indonesia</option></select></div>
+            <div class="setting-row"><div><b>Fuso horário</b><small>Detectado automaticamente neste computador</small></div><span class="setting-value" id="timezoneValue"></span></div>
+            <label class="setting-row"><div><b>Iniciar com o Windows</b><small>Abre discretamente na bandeja para manter os lembretes.</small></div><span class="switch"><input type="checkbox" id="settingAutostart"><i></i></span></label>
+            <label class="setting-row"><div><b>Confirmar antes de excluir</b><small>Evita a remoção acidental de compromissos.</small></div><span class="switch"><input type="checkbox" id="settingConfirmDelete"><i></i></span></label>
+          </section>
+          <section class="settings-panel" data-panel="appearance">
+            <div class="panel-title"><h3>Aparência</h3><p>Deixe o calendário com a sua cara.</p></div>
+            <div class="setting-row"><div><b>Tema</b><small>Claro, escuro ou igual ao Windows</small></div><select id="settingTheme"><option value="system">Usar tema do sistema</option><option value="light">Claro</option><option value="dark">Escuro</option></select></div>
+            <div class="setting-block"><div><b>Cor de destaque</b><small>Aplicada aos botões e elementos selecionados.</small></div><div class="accent-picker" id="accentPicker"></div><div class="custom-color"><input type="color" id="customAccentColor" value="#6757e8" title="Escolher cor personalizada"><label><span>#HEX ou RGB</span><input id="customAccentText" maxlength="24" placeholder="#6757E8 ou rgb(103, 87, 232)"></label><button class="ghost" type="button" id="applyCustomAccent">Aplicar cor</button></div><small class="color-error hidden" id="customColorError">Use #RRGGBB ou RGB com valores entre 0 e 255.</small></div>
+            <div class="setting-row"><div><b>Tamanho do texto</b><small>Ajusta a leitura sem alterar a organização.</small></div><select id="settingFontScale"><option value="0.92">Pequeno</option><option value="1">Padrão</option><option value="1.1">Grande</option></select></div>
+            <label class="setting-row"><div><b>Modo compacto</b><small>Reduz espaçamentos para mostrar mais informações.</small></div><span class="switch"><input type="checkbox" id="settingCompact"><i></i></span></label>
+            <label class="setting-row"><div><b>Contraste reforçado</b><small>Destaca bordas e textos secundários.</small></div><span class="switch"><input type="checkbox" id="settingHighContrast"><i></i></span></label>
+            <label class="setting-row"><div><b>Reduzir transparência</b><small>Usa fundos sólidos e consome menos recursos gráficos.</small></div><span class="switch"><input type="checkbox" id="settingReduceTransparency"><i></i></span></label>
+            <label class="setting-row"><div><b>Mostrar próximo compromisso</b><small>Exibe o cartão de resumo no topo do calendário.</small></div><span class="switch"><input type="checkbox" id="settingShowInsight"><i></i></span></label>
+            <label class="setting-row"><div><b>Reduzir animações</b><small>Minimiza movimentos e transições na interface.</small></div><span class="switch"><input type="checkbox" id="settingReduceMotion"><i></i></span></label>
+          </section>
+          <section class="settings-panel" data-panel="calendar">
+            <div class="panel-title"><h3>Calendário e eventos</h3><p>Ajuste datas, horários e valores padrão.</p></div>
+            <div class="setting-row"><div><b>Sistema de calendário</b><small>Altera a forma como meses, anos e números dos dias são exibidos.</small></div><select id="settingCalendarSystem"><option value="gregory">Gregoriano</option><option value="buddhist">Budista</option><option value="islamic">Islâmico</option><option value="hebrew">Hebraico</option><option value="persian">Persa</option><option value="indian">Nacional indiano</option><option value="japanese">Japonês</option><option value="chinese">Chinês tradicional</option></select></div>
+            <div class="setting-row"><div><b>Primeiro dia da semana</b><small>Ordem das colunas do calendário</small></div><select id="settingWeekStart"><option value="0">Domingo</option><option value="1">Segunda-feira</option></select></div>
+            <div class="setting-row"><div><b>Formato de hora</b><small>Como os horários são mostrados</small></div><select id="settingTimeFormat"><option value="24">24 horas</option><option value="12">12 horas</option></select></div>
+            <div class="setting-row"><div><b>Duração padrão</b><small>Usada em novos eventos</small></div><select id="settingDuration"><option value="30">30 minutos</option><option value="60">1 hora</option><option value="90">1 hora e 30 min</option><option value="120">2 horas</option></select></div>
+            <div class="setting-row"><div><b>Lembrete padrão</b><small>Aplicado automaticamente a novos eventos</small></div><select id="settingDefaultReminder"><option value="-1">Sem lembrete</option><option value="0">Na hora</option><option value="5">5 minutos antes</option><option value="15">15 minutos antes</option><option value="30">30 minutos antes</option><option value="60">1 hora antes</option><option value="1440">1 dia antes</option></select></div>
+            <div class="setting-row"><div><b>Calendário padrão</b><small>Selecionado ao criar um evento</small></div><select id="settingDefaultCategory"></select></div>
+          </section>
+          <section class="settings-panel" data-panel="notifications">
+            <div class="panel-title"><h3>Notificações</h3><p>Escolha como receber seus lembretes.</p></div>
+            <label class="setting-row"><div><b>Ativar lembretes</b><small>Mostra avisos do Windows antes dos eventos.</small></div><span class="switch"><input type="checkbox" id="settingNotifications"><i></i></span></label>
+            <label class="setting-row"><div><b>Mostrar o endereço</b><small>Inclui o local do compromisso na notificação.</small></div><span class="switch"><input type="checkbox" id="settingNotifyLocation"><i></i></span></label>
+            <div class="notice-card"><span>◇</span><div><b>Lembretes privados e locais</b><p>O SwapUp! verifica sua agenda no próprio computador. Nenhum evento é enviado para servidores externos.</p></div></div>
+          </section>
+          <section class="settings-panel" data-panel="shortcuts">
+            <div class="panel-title"><h3>Atalhos de teclado</h3><p>Acesse as ações mais usadas sem tirar as mãos do teclado.</p></div>
+            <div class="shortcut-list"><div><span>Novo evento</span><kbd>Ctrl</kbd><b>+</b><kbd>N</kbd></div><div><span>Buscar eventos</span><kbd>Ctrl</kbd><b>+</b><kbd>F</kbd></div><div><span>Ir para hoje</span><kbd>Alt</kbd><b>+</b><kbd>H</kbd></div><div><span>Período anterior ou seguinte</span><kbd>Alt</kbd><b>+</b><kbd>←</kbd><span class="shortcut-or">/</span><kbd>→</kbd></div><div><span>Visões Mês, Semana e Dia</span><kbd>Ctrl</kbd><b>+</b><kbd>1</kbd><span class="shortcut-or">…</span><kbd>3</kbd></div><div><span>Abrir Agenda</span><kbd>Ctrl</kbd><b>+</b><kbd>4</kbd></div><div><span>Relatar um bug</span><kbd>Ctrl</kbd><b>+</b><kbd>Shift</kbd><b>+</b><kbd>R</kbd></div><div><span>Abrir configurações</span><kbd>Ctrl</kbd><b>+</b><kbd>,</kbd></div><div><span>Fechar janela ou painel</span><kbd>Esc</kbd></div></div>
+          </section>
+          <section class="settings-panel" data-panel="data">
+            <div class="panel-title"><h3>Dados e backup</h3><p>Seus eventos ficam armazenados somente neste computador.</p></div>
+            <div class="data-stats"><div><b id="statEvents">0</b><span>eventos</span></div><div><b id="statCategories">0</b><span>categorias</span></div><div><b>Local</b><span>armazenamento</span></div></div>
+            <button class="data-action" id="settingsBackupBtn"><span>↗</span><div><b>Fazer backup agora</b><small>Salve eventos, perfil e configurações em um arquivo.</small></div></button>
+            <button class="data-action" id="settingsRestoreBtn"><span>↙</span><div><b>Restaurar um backup</b><small>Importe um arquivo criado anteriormente pelo SwapUp!.</small></div></button>
+          </section>
+          <section class="settings-panel" data-panel="support">
+            <div class="panel-title"><h3>Suporte e feedback</h3><p>Encontrou algo errado? Envie os detalhes para ajudar a melhorar o SwapUp!.</p></div>
+            <div class="support-channel" id="supportChannelStatus"></div>
+            <button class="data-action" id="settingsReportBugBtn"><span>⚑</span><div><b>Relatar um bug</b><small>Informe o tipo, impacto, passos para reproduzir e envie uma captura de tela.</small></div></button>
+            <div class="notice-card"><span>♡</span><div><b>Relatos ajudam o produto a evoluir</b><p>O relatório inclui apenas as informações que você preencher. Seus eventos e dados pessoais nunca são anexados automaticamente.</p></div></div>
+          </section>
+          <section class="settings-panel" data-panel="about">
+            <div class="about-logo"><img src="/assets/swapup-icon.png" alt=""><h3>SwapUp!</h3><p>Seu tempo, do seu jeito.</p><span>Versão 1.3.2</span></div>
+            <div class="notice-card"><span>✓</span><div><b>Você está usando a versão mais recente</b><p>Calendário local, rápido e projetado para respeitar sua privacidade.</p></div></div>
+            <div class="credits"><b>Desenvolvido por Felipe Marquezini</b><p>© 2026 SwapUp! Todos os direitos reservados.</p></div>
+          </section>
+        </div>
+      </div>
+      <div class="settings-actions clean"><span class="hidden" id="settingsStatus"></span><div class="settings-save-controls hidden" id="settingsSaveControls"><button class="ghost" id="settingsCancelBtn" type="button">Cancelar</button><button class="primary" id="saveSettingsBtn" type="button">Salvar alterações</button></div></div>
+    </div>
+  </div>
+  <div class="modal-backdrop confirm-backdrop hidden" id="confirmModal">
+    <div class="modal confirm-modal" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMessage">
+      <div class="confirm-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3h6l1 2h4v2H4V5h4l1-2Zm-2 6h10l-.8 11H7.8L7 9Zm3 2v7h2v-7h-2Zm4 0v7h2v-7h-2Z"/></svg></div>
+      <div class="confirm-copy"><span class="eyebrow">CONFIRMAÇÃO</span><h2 id="confirmTitle">Confirmar exclusão</h2><p id="confirmMessage"></p></div>
+      <div class="confirm-actions"><button class="ghost" type="button" id="confirmCancelBtn">Cancelar</button><button class="danger-solid" type="button" id="confirmAcceptBtn">Excluir</button></div>
+    </div>
+  </div>
+  <div class="modal-backdrop hidden" id="bugReportModal">
+    <form class="modal bug-report-modal" id="bugReportForm">
+      <div class="modal-head"><div><span class="eyebrow">SUPORTE</span><h2>Relatar um bug</h2><p class="modal-subtitle">Conte o que aconteceu. Quanto mais detalhes, mais fácil será corrigir.</p></div><button type="button" class="icon-btn" data-bug-close>×</button></div>
+      <div class="form-grid">
+        <label class="field"><span>Tipo do problema</span><select id="bugType" required><option value="functional">Algo não funciona</option><option value="visual">Problema visual</option><option value="performance">Lentidão ou travamento</option><option value="translation">Tradução incorreta</option><option value="accessibility">Acessibilidade</option><option value="data">Dados ou backup</option><option value="other">Outro</option></select></label>
+        <label class="field"><span>Impacto</span><select id="bugSeverity" required><option value="low">Baixo — pequeno incômodo</option><option value="medium" selected>Médio — atrapalha o uso</option><option value="high">Alto — impede uma tarefa</option><option value="critical">Crítico — perda de dados ou aplicativo inutilizável</option></select></label>
+      </div>
+      <label class="field full"><span>Resumo</span><input id="bugTitle" required maxlength="100" placeholder="Ex.: Evento não aparece na visão semanal"></label>
+      <label class="field full"><span>O que aconteceu?</span><textarea id="bugDescription" required rows="4" maxlength="2000" placeholder="Descreva o resultado que você viu e o que esperava que acontecesse..."></textarea></label>
+      <label class="field full"><span>Passos para reproduzir</span><textarea id="bugSteps" rows="3" maxlength="1500" placeholder="1. Abri...  2. Cliquei...  3. O problema apareceu..."></textarea></label>
+      <label class="field full"><span>E-mail para retorno (opcional)</span><input type="email" id="bugContact" maxlength="120" placeholder="voce@exemplo.com"></label>
+      <div class="bug-attachment"><div><b>Captura de tela ou foto</b><small>Opcional · PNG, JPG ou WebP · máximo de 5 MB</small></div><button class="ghost" type="button" id="chooseBugAttachment">Adicionar imagem</button><input class="hidden" type="file" id="bugAttachmentInput" accept="image/png,image/jpeg,image/webp"><div class="bug-file hidden" id="bugFile"><img id="bugImagePreview" alt=""><span id="bugFileName"></span><button type="button" id="removeBugAttachment">×</button></div></div>
+      <div class="bug-privacy">O relatório inclui versão, idioma, sistema de calendário e versão do Windows. Nenhum evento, nota ou endereço é enviado.</div>
+      <div class="bug-delivery-status hidden" id="bugDeliveryStatus"></div>
+      <div class="modal-actions"><button type="button" class="ghost" id="copyBugReportBtn">Copiar relatório</button><span></span><button type="button" class="ghost" data-bug-close>Cancelar</button><button type="submit" class="primary">Enviar relatório</button></div>
+    </form>
+  </div>
+  <div class="toast-stack" id="toasts"></div>
+  <script src="i18n-data.js"></script>
+  <script src="i18n.js"></script>
+  <script src="product-config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
